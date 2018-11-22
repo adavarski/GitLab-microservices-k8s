@@ -115,6 +115,7 @@ status:
   Apply :
   
   $ export KUBECONFIG=~/.kube/config
+  $ rm docker-compose.yml
   $ kubectl create -f .
 deployment.extensions/mongo created
 service/mongo created
