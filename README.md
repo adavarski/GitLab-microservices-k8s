@@ -44,10 +44,9 @@ Browser: http://localhost:9292
 
 $ docker rm $(docker ps -a -q)
 
-## Deploy to minikube:
+## Deploy to minikube using kubectl:
 
 ```
-$ minikube start
 $ mkdir tmp
 $ cp docker-compose.yml tmp
 
@@ -148,6 +147,27 @@ $ minikube ip
 
 Browser: http://192.168.99.100:30623
 ```
+
+## Deploy to minikube using Helm:
+
+```
+$ helm init
+$ helm --kube-context=minikube install --set usePassword=false --name mongodb  stable/mongodb
+$ helm upgrade post post/charts/post --install --kube-context=minikube --set image.tag=latest
+$ helm upgrade ui ui/charts/ui --install --kube-context=minikube --set image.tag=latest
+
+$ kubectl get svc
+NAME         TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+kubernetes   ClusterIP   10.96.0.1        <none>        443/TCP          1h
+mongodb      ClusterIP   10.101.221.251   <none>        27017/TCP        3m
+post         ClusterIP   10.104.186.193   <none>        5000/TCP         1m
+ui           NodePort    10.106.85.96     <none>        9292:32299/TCP   1m
+
+$ minikube ip
+192.168.99.100
+
+Browser: http://192.168.99.100:32299/
+
 
 
   
