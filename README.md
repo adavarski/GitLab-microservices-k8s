@@ -37,4 +37,5 @@ Test locally:
 
 docker-compose up --build
 
+$ docker rm $(docker ps -a -q)
 
