@@ -1,1 +1,1 @@
-# UI service of Microservices Reddit application
+# UI service of Microservices Bluepost application
