@@ -2,8 +2,8 @@
 
 https://gitlab.com/bluepost
 ```
-$ git clone https://github.com/adavarski/gitlab-group-microservices
-$ cd gitlab-group-microservices
+$ git clone https://github.com/adavarski/gitlab-group-microservices-k8s-minikube
+$ cd gitlab-group-microservices-k8s-minikube
 $ rm -rf .git
 ```
 
