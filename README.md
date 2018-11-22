@@ -33,22 +33,25 @@ $ git commit -m "Init commit"
 $ git remote add origin https://gitlab.com/bluepost/post.git
 $ git push origin master
 ```
-Test locally:
 
+GitLab push to Dockerhub: davarski/ui and davarski/post images with tags latest, etc.
+
+## Test microservices locally:
+```
 $ docker-compose up --build
-
+```
 Browser: http://localhost:9292
 
 $ docker rm $(docker ps -a -q)
 
-Deploy to minikube:
+## Deploy to minikube:
 
 ```
+$ minikube start
 $ mkdir tmp
 $ cp docker-compose.yml tmp
-$ vi docker-compose.yml
 
-Setup github images and version: "2":
+Setup dockerhub images and setup docker-compose version: "2":
 
 $ cat docker-compose.yml
 version: '2'
@@ -74,8 +77,9 @@ services:
     depends_on:
       - post
 
-Generete k8s files:
+Generete k8s kubectl files:
 
+$ rm docker-compose.yml
 $ kompose convert
 WARN Unsupported depends_on key - ignoring        
 INFO Kubernetes file "mongo-service.yaml" created 
@@ -112,17 +116,22 @@ spec:
 status:
   loadBalancer: {}
   
-  Apply :
+  kubectl apply :
   
-  $ export KUBECONFIG=~/.kube/config
-  $ rm docker-compose.yml
-  $ kubectl create -f .
+$ export KUBECONFIG=~/.kube/config
+$ kubectl create -f .
 deployment.extensions/mongo created
 service/mongo created
 deployment.extensions/post created
 service/post created
 deployment.extensions/ui created
 service/ui created
+
+$ kubectl get pods
+NAME                     READY   STATUS    RESTARTS   AGE
+mongo-6bc479dbf6-2867b   1/1     Running   0          19m
+post-659cbd6d8b-rdqxh    1/1     Running   0          19m
+ui-7774c64655-fqp5c      1/1     Running   0          19m
 
 $ minikube ip
 192.168.99.100
