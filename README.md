@@ -89,6 +89,16 @@ INFO Kubernetes file "mongo-deployment.yaml" created
 INFO Kubernetes file "post-deployment.yaml" created 
 INFO Kubernetes file "ui-deployment.yaml" created 
 
+If you want you can setup images based on GitLab build:
+Example: davarski/post:master_43e751df70a228f3f6ceee088b1db975aa06b275
+
+DockerHub Tags for image davarski/post:
+latest
+2.0.0
+master_43e751df70a228f3f6ceee088b1db975aa06b275
+master_0439d6744484ad8cd0862e69a5022c54ec735564
+master_14b278978c4e5122678de0dd5efb791eac100d40
+
 Setup nodeport for UI
 
 Add NodePort and nodePort
