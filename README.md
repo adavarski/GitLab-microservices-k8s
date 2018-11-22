@@ -35,9 +35,101 @@ $ git push origin master
 ```
 Test locally:
 
-docker-compose up --build
+$ docker-compose up --build
 
 Browser: http://localhost:9292
 
 $ docker rm $(docker ps -a -q)
 
+Deploy to minikube:
+
+```
+$ mkdir tmp
+$ cp docker-compose.yml tmp
+$ vi docker-compose.yml
+
+Setup github images and version: "2":
+
+$ cat docker-compose.yml
+version: '2'
+
+services:
+  mongo:
+    image: mongo:3.4
+
+  post:
+    image: davarski/post
+    environment:
+      - POST_DATABASE_HOST=mongo
+    depends_on:
+      - mongo
+
+  ui:
+    image: davarski/ui
+    environment:
+      - POST_SERVICE_HOST=post
+      - POST_SERVICE_PORT=5000
+    ports:
+      - 9292:9292
+    depends_on:
+      - post
+
+Generete k8s files:
+
+$ kompose convert
+WARN Unsupported depends_on key - ignoring        
+INFO Kubernetes file "mongo-service.yaml" created 
+INFO Kubernetes file "post-service.yaml" created  
+INFO Kubernetes file "ui-service.yaml" created    
+INFO Kubernetes file "mongo-deployment.yaml" created 
+INFO Kubernetes file "post-deployment.yaml" created 
+INFO Kubernetes file "ui-deployment.yaml" created 
+
+Setup nodeport for UI
+
+Add NodePort and nodePort
+
+$ cat ui-service.yaml 
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.1.0 (36652f6)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: ui
+  name: ui
+spec:
+  type: NodePort
+  ports:
+  - name: "9292"
+    port: 9292
+    targetPort: 9292
+    nodePort: 30623
+  selector:
+    io.kompose.service: ui
+status:
+  loadBalancer: {}
+  
+  Apply :
+  
+  $ export KUBECONFIG=~/.kube/config
+  $ kubectl create -f .
+deployment.extensions/mongo created
+service/mongo created
+deployment.extensions/post created
+service/post created
+deployment.extensions/ui created
+service/ui created
+
+$ minikube ip
+192.168.99.100
+
+Browser: http://192.168.99.100:30623
+```
+
+
+  
+  
+  
