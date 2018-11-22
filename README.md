@@ -37,5 +37,7 @@ Test locally:
 
 docker-compose up --build
 
+Browser: http://localhost:9292
+
 $ docker rm $(docker ps -a -q)
 
