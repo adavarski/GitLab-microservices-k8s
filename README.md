@@ -33,5 +33,8 @@ $ git commit -m "Init commit"
 $ git remote add origin https://gitlab.com/bluepost/post.git
 $ git push origin master
 ```
+Test locally:
+
+docker-compose up --build
 
 
