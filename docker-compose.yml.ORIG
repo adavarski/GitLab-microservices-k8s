@@ -5,14 +5,14 @@ services:
     image: mongo:3.4
 
   post:
-    image: davarski/post
+    build: ./post
     environment:
       - POST_DATABASE_HOST=mongo
     depends_on:
       - mongo
 
   ui:
-    image: davarski/ui
+    build: ./ui
     environment:
       - POST_SERVICE_HOST=post
       - POST_SERVICE_PORT=5000
