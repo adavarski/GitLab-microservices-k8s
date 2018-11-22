@@ -1,5 +1,11 @@
 # microservises app: bluepost
 
+```
+$ git clone https://github.com/adavarski/gitlab-group-microservices
+$ cd gitlab-group-microservices
+$ rm -rf .git
+```
+
 This is an example of a microservices application with **Gitlab CI** pipelenes (build, test, release)
 
 In Gitlab UI, create a new group for bluepost application
