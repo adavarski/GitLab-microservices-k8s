@@ -1,5 +1,6 @@
 # microservises app: bluepost
 
+https://gitlab.com/bluepost
 ```
 $ git clone https://github.com/adavarski/gitlab-group-microservices
 $ cd gitlab-group-microservices
