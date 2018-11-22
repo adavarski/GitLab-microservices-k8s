@@ -18,8 +18,8 @@ service:
   externalPort: 5000
   internalPort: 5000
 
-nodeSelector:
-  cloud.google.com/gke-nodepool: default-pool
+#nodeSelector:
+#  cloud.google.com/gke-nodepool: default-pool
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

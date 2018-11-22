@@ -4,7 +4,7 @@
 # nameOverride: ui
 replicaCount: 2
 image:
-  repository: dockerbub/ui
+  repository: davarski/ui
   tag: latest
   pullPolicy: IfNotPresent
 
@@ -18,8 +18,8 @@ service:
   externalPort: 9292
   internalPort: 9292
 
-nodeSelector:
-  cloud.google.com/gke-nodepool: default-pool
+#nodeSelector:
+#  cloud.google.com/gke-nodepool: default-pool
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
