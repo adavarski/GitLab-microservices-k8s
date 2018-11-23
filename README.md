@@ -264,6 +264,10 @@ $ minikube ip
 
 Login to jenkins http://192.168.99.100:32123 user admin with password from printf output
 
+Setup k8s RBAC for jenkins:
+
+$ kubectl create clusterrolebinding kube-system-default-admin --clusterrole cluster-admin --serviceaccount=kube-system:default
+
 Deploy app
 
 Create a multibranch pipline with a fork of this repository as the Git source for the pipeline using provided Jenkinsfile.
