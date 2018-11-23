@@ -1,5 +1,7 @@
 # microservises app: bluepost
 
+We will build, test and release with GitLab:
+
 https://gitlab.com/bluepost
 ```
 $ git clone https://github.com/adavarski/GitLab-group-microservices-minikube-deploy
