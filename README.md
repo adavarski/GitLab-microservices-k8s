@@ -277,6 +277,14 @@ Deploy blueprint app
 
 Create a multibranch pipline with a fork of this repository as the Git source for the pipeline using provided Jenkinsfile.
 
+$ kubectl get pod
+NAME                       READY   STATUS    RESTARTS   AGE
+jenkins-9f8486cb5-kfb6s    1/1     Running   0          2h
+mongodb-69fc4cddff-b2hqz   1/1     Running   1          59m
+post-65c8d5c598-shhhm      1/1     Running   6          31m
+ui-7d95c8ff49-4wwl2        1/1     Running   6          29m
+ui-7d95c8ff49-fr74x        1/1     Running   4          29m
+
 $ kubectl get svc|grep ui
 ui              NodePort    10.103.25.143   <none>        9292:30124/TCP   9m
 
