@@ -26,7 +26,7 @@ podTemplate(
         stage ('Deploy') {
             container ('helm') {
                 sh "/helm init --client-only --skip-refresh"
-                helm --set usePassword=false --name mongodb  stable/mongodb
+                sh "/helm --set usePassword=false --name mongodb  stable/mongodb"
                 sh "/helm upgrade post post/charts/post --install --set image.tag=latest"
                 sh "/helm upgrade ui ui/charts/ui --install --set image.tag=latest"
             }
