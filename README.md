@@ -290,29 +290,47 @@ ui              NodePort    10.103.25.143   <none>        9292:30124/TCP   9m
 
 Browser: http://192.168.99.100:30124
 
+Clean:
+
+helm del --purge post
+helm del --purge ui
+helm del --purge mongodb
 
 
 ````
 ### Deploy with GitLab and Helm : TODO
 
 ```
-Install GitLab
+Install GitLab or use gitlab chart to install 
+
+$ helm init # initialize Helm
+$ helm repo add gitlab https://charts.gitlab.io
+$ helm install --name gitlab \
+--namespace default \
+--set baseIP=192.168.100.99 \
+--set baseDomain=ci.devops.fun \
+gitlab/gitlab-omnibus
 
 Import project from github:
 
 Setup deploy pipeline: add .gitlab-ci.yml to root of repo:
 
-# deploy to staging environment
+stages:
+  - deploy
+
+# deploy to staging environment (minikube)
 deploy_staging:
   stage: deploy
   image: ibmcom/k8s-helm:v2.6.0
   before_script:
-    - export KUBECONFIG=~/.kube/config ???? -kube-context=minikube
+    - export KUBECONFIG=/etc/kubernetes/admin.conf 
     - helm init --client-only
   script:
     - helm upgrade  upgrade post post/charts/post --install --set image.tag=latest
     - helm upgrade  upgrade ui ui/charts/ui --install  --set image.tag=latest
 
+ environment:
+    name: staging
   only:
   - master
 ```
