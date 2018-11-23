@@ -193,65 +193,9 @@ helm del --purge mongodb
 ```
 Setup jenkins https://github.com/adavarski/K8S-with-jenkins-and-helm
 
-jenkins-volume.yml 
--------------------
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: jenkins-volume
-  namespace: default
-spec:
-  storageClassName: jenkins-volume
-  accessModes:
-    - ReadWriteOnce
-  capacity:
-    storage: 10Gi
-  persistentVolumeReclaimPolicy: Retain
-  hostPath:
-    path: /data/jenkins/
-    
+ $ cd ./jenkins    
  $ kubectl create -f jenkins-volume.yml 
- 
- values.yml 
- ---------------------
-Master:
-  ServicePort: 8080
-  ServiceType: NodePort
-  NodePort: 32123
-  ScriptApproval:
-    - "method groovy.json.JsonSlurperClassic parseText java.lang.String"
-    - "new groovy.json.JsonSlurperClassic"
-    - "staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods leftShift java.util.Map java.util.Map"
-    - "staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods split java.lang.String"
-  InstallPlugins:
-    - kubernetes:1.6.4
-    - workflow-aggregator:2.5
-    - workflow-job:2.21
-    - credentials-binding:1.16
-    - git:3.9.1
-Agent:
-  volumes:
-    - type: HostPath
-      hostPath: /var/run/docker.sock
-      mountPath: /var/run/docker.sock
-
-Persistence:
-  Enabled: true
-  StorageClass: jenkins-volume
-  Size: 10Gi
-
-NetworkPolicy:
-  Enabled: false
-  ApiVersion: extensions/v1beta1
-
-rbac:
-  install: true
-  
- $  helm install
-  --name jenkins
-  --namespace default
-  --values values.yml
-  stable/jenkins
+ $ helm install --name jenkins --values values.yml stable/jenkins
 
 Get admin user password:
 printf $(kubectl get secret --namespace jenkins jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
@@ -326,8 +270,8 @@ deploy_staging:
     - export KUBECONFIG=/etc/kubernetes/admin.conf 
     - helm init --client-only
   script:
-    - helm upgrade  upgrade post post/charts/post --install --set image.tag=latest
-    - helm upgrade  upgrade ui ui/charts/ui --install  --set image.tag=latest
+    - helm upgrade  upgrade post ./post/charts/post --install --set image.tag=latest
+    - helm upgrade  upgrade ui ./ui/charts/ui --install  --set image.tag=latest
 
  environment:
     name: staging
