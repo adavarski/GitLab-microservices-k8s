@@ -267,6 +267,7 @@ Login to jenkins http://192.168.99.100:32123 user admin with password from print
 Setup k8s RBAC for jenkins:
 
 $ kubectl create clusterrolebinding kube-system-default-admin --clusterrole cluster-admin --serviceaccount=kube-system:default
+$ kubectl create clusterrolebinding default-sa-admin --user system:serviceaccount:default:default  --clusterrole cluster-admin
 
 Deploy app
 
