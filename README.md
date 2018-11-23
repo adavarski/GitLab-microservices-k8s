@@ -156,6 +156,13 @@ $ helm --kube-context=minikube install --set usePassword=false --name mongodb  s
 $ helm upgrade post post/charts/post --install --kube-context=minikube --set image.tag=latest
 $ helm upgrade ui ui/charts/ui --install --kube-context=minikube --set image.tag=latest
 
+$ kubectl get pod
+NAME                       READY   STATUS    RESTARTS   AGE
+mongodb-69fc4cddff-zqdkk   1/1     Running   0          11m
+post-65c8d5c598-gjlpb      1/1     Running   0          10m
+ui-7d95c8ff49-dsjvr        1/1     Running   0          9m
+ui-7d95c8ff49-hg7kb        1/1     Running   0          9m
+
 $ kubectl get svc
 NAME         TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
 kubernetes   ClusterIP   10.96.0.1        <none>        443/TCP          1h
