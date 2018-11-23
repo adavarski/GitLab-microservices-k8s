@@ -277,6 +277,12 @@ Deploy blueprint app
 
 Create a multibranch pipline with a fork of this repository as the Git source for the pipeline using provided Jenkinsfile.
 
+$ kubectl get svc|grep ui
+ui              NodePort    10.103.25.143   <none>        9292:30124/TCP   9m
+
+Browser: http://192.168.99.100:30124
+
+
 
 ````
 ### Deploy with GitLab and Helm : TODO
