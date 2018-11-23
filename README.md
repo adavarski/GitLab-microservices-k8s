@@ -253,39 +253,22 @@ rbac:
   --values values.yml
   stable/jenkins
 
+Get admin user password:
 printf $(kubectl get secret --namespace jenkins jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
 
-Login to jenkins wit admin: password from above line 
+ $ kubectl get svc|grep NodePort
+jenkins         NodePort    10.100.88.246   <none>        8080:32123/TCP   45m
+
+$ minikube ip
+192.168.99.100
+
+Login to jenkins http://192.168.99.100:32123 user admin with password from printf output
 
 Deploy app
 
-Create a pipline job with a fork of this repository as the Git source for the pipeline.
+Create a multibranch pipline with a fork of this repository as the Git source for the pipeline using provided Jenkinsfile.
 
-Jenkinsfile
-============
-podTemplate(
-    label: 'mypod', 
-    inheritFrom: 'default',
-          containerTemplate(
-            name: 'helm', 
-            image: 'ibmcom/k8s-helm:v2.6.0',
-            ttyEnabled: true,
-            command: 'cat'
-        )
-  
-    node('mypod') {
-            
-        stage ('Deploy') {
-            checkout scm
-            container ('helm') {
-                sh "/helm init --client-only --skip-refresh"
-                sh "/helm upgrade post post/charts/post --install --kube-context=minikube --set image.tag=latest"
-                sh "/helm upgrade ui ui/charts/ui --install --kube-context=minikube --set image.tag=latest"
 
-            }
-        }
-    }
- 
 ````
 ### Deploy with GitLab and Helm : TODO
 
@@ -304,8 +287,8 @@ deploy_staging:
     - export KUBECONFIG=~/.kube/config ???? -kube-context=minikube
     - helm init --client-only
   script:
-    - helm upgrade  upgrade post post/charts/post --install --kube-context=minikube --set image.tag=latest
-    - helm upgrade  upgrade ui ui/charts/ui --install --kube-context=minikube --set image.tag=latest
+    - helm upgrade  upgrade post post/charts/post --install --set image.tag=latest
+    - helm upgrade  upgrade ui ui/charts/ui --install  --set image.tag=latest
 
   only:
   - master
