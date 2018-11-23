@@ -280,6 +280,8 @@ podTemplate(
             container ('helm') {
                 sh "/helm init --client-only --skip-refresh"
                 sh "/helm upgrade post post/charts/post --install --kube-context=minikube --set image.tag=latest"
+                sh "/helm upgrade ui ui/charts/ui --install --kube-context=minikube --set image.tag=latest"
+
             }
         }
     }
@@ -288,36 +290,23 @@ podTemplate(
 ### Deploy with GitLab and Helm : TODO
 
 ```
-helm repo add gitlab https://charts.gitlab.io/
-helm repo update
-helm upgrade --install gitlab gitlab/gitlab \
-  --timeout 600 \
-  --set global.hosts.externalIP=`minikube ip` \
-  --set certmanager-issuer.email=email@example.com
-  
-Initial login
- https://`minikube ip`
-GitLab automatically created a random password for root user. This can be extracted by the following command :
-kubectl get secret gitlab-gitlab-initial-root-password -ojsonpath={.data.password} | base64 --decode ; echo
+Install GitLab
 
-Git commit this repo to GitLab k8s chart:
+Import project from github:
 
-Setup pipelines for ui and post and  mongodb:
+Setup deploy pipeline: add .gitlab-ci.yml to root of repo:
 
 # deploy to staging environment
 deploy_staging:
   stage: deploy
   image: ibmcom/k8s-helm:v2.6.0
-  volume:/etc/kubernetes/:/etc/kubernetes/ ?????
   before_script:
-    - export KUBECONFIG=/etc/kubernetes/admin.conf ??????? 
+    - export KUBECONFIG=~/.kube/config ???? -kube-context=minikube
     - helm init --client-only
   script:
     - helm upgrade  upgrade post post/charts/post --install --kube-context=minikube --set image.tag=latest
     - helm upgrade  upgrade ui ui/charts/ui --install --kube-context=minikube --set image.tag=latest
 
-  environment:
-    name: staging
   only:
   - master
 ```
