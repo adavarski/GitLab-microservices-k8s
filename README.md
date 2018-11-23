@@ -148,6 +148,10 @@ $ minikube ip
 192.168.99.100
 
 Browser: http://192.168.99.100:30623
+
+Clean:
+$ kubectl delete --all svc --namespace=default
+$ kubectl delete --all deployments --namespace=default
 ```
 
 ## Deploy to minikube using Helm:
@@ -176,6 +180,8 @@ $ minikube ip
 192.168.99.100
 
 Browser: http://192.168.99.100:32299/
+
+Clean:
 
 helm del --purge post
 helm del --purge ui
