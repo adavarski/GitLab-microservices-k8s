@@ -2,8 +2,8 @@
 
 https://gitlab.com/bluepost
 ```
-$ git clone https://github.com/adavarski/gitlab-group-microservices-k8s-minikube
-$ cd gitlab-group-microservices-k8s-minikube
+$ git clone https://github.com/adavarski/GitLab-group-microservices-minikube-deploy
+$ cd GitLab-group-microservices-minikube-deploy
 $ rm -rf .git
 ```
 
@@ -38,6 +38,8 @@ GitLab push to Dockerhub: davarski/ui and davarski/post images with tags latest,
 
 ## Test microservices locally:
 ```
+$ mv docker-compose.yml docker-compose.yml.dockerhub
+$ cp docker-compose.yml.ORIG docker-compose.yml
 $ docker-compose up --build
 ```
 Browser: http://localhost:9292
@@ -175,6 +177,9 @@ $ minikube ip
 
 Browser: http://192.168.99.100:32299/
 
+helm del --purge post
+helm del --purge ui
+helm del --purge mongodb
 
 
   
