@@ -34,13 +34,20 @@ $ git add .
 $ git commit -m "Init commit"
 $ git remote add origin https://gitlab.com/bluepost/post.git
 $ git push origin master
+
+$ cd ../mongodb
+$ git init
+$ git add .
+$ git commit -m "Init commit"
+$ git remote add origin https://gitlab.com/bluepost/mongodb.git
+$ git push origin master
 ```
-$ helm  install --set usePassword=false --name mongodb  stable/mongodb
+$ helm  install --set usePassword=false --name mongodb  stable/mongodb if we not use helm chart ... chart values -> usePassword=false
 
 ``` Setup ENV variables for pipeline: CI_REGISTRY_PASSWORD, CI_REGISTRY_USER ```
 
 ```
-For ui pipeline (the same for post)
+For ui pipeline (the same for post, mongodb)
 
 Go to https://gitlab.com/bluepost/ui/settings/ci_cd -> Runners (Expand)
 
@@ -347,6 +354,39 @@ deploy_staging:
   - master 
   
  ``` 
+ 
+ ```
+ $ cat mongodb/.gitlab-ci.yml
+stages:
+  - deploy
+  
+variables:
+
+  CA: /etc/deploy/ca.crt
+  
+deploy_staging:
+  tags:
+  - docker-minikube3
+  stage: deploy
+  image: davarski/k8s-helm:latest
+  before_script:
+    - mkdir -p /etc/deploy
+    - echo ${CI_ENV_K8S_CA}|base64 -d > ${CA}
+    - kubectl config set-cluster minikube --server=${CI_ENV_K8S_MASTER} --certificate-authority=/etc/deploy/ca.crt --embed-certs=true
+    - kubectl config set-credentials default --token=${CI_ENV_K8S_SA_TOKEN}
+    - kubectl config set-context myctxt --cluster=minikube --user=default
+    - kubectl config use-context myctxt
+    - helm init --client-only
+
+  script:
+    - helm  upgrade mongodb ./charts/mongodb --install  --set image.tag=latest 
+  environment:
+    name: staging
+  only:
+  - master   
+
+ 
+ ```
  ```
 davar@home ~/LABS/GitLab-group-microservices-minikube-deploy/post $ helm list
 NAME   	REVISION	UPDATED                 	STATUS  	CHART         	APP VERSION	NAMESPACE
