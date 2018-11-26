@@ -36,6 +36,108 @@ $ git remote add origin https://gitlab.com/bluepost/post.git
 $ git push origin master
 ```
 
+``` Setup ENV variables for pipeline: CI_REGISTRY_PASSWORD, CI_REGISTRY_USER
+
+For ui pipeline (the same for post)
+
+Go to https://gitlab.com/bluepost/ui/settings/ci_cd -> Runners (Expand)
+
+```
+Set up a specific Runner manually
+Install GitLab Runner
+Specify the following URL during the Runner setup: https://gitlab.com/ 
+Use the following registration token during setup: yC87WF_USt9KZqF9c-Ps 
+Reset runners registration token
+Start the Runner!
+```
+```
+$ kubectl create -f gitlab-runner-deployment.yaml
+
+$ kubectl get pod|grep runner|grep Running
+gitlab-runner-5d49c87d4f-d6rwj                1/1     Running       0          2h
+
+$kubectl exec -it gitlab-runner-5d49c87d4f-d6rwj /bin/bash
+
+#gitlab-runner register --non-interactive --url "https://gitlab.com/" --registration-token "yC87WF_USt9KZqF9c-Ps" --executor "docker" --docker-image alpine:3 --description "docker-runner" --tag-list "docker-minikube" --run-untagged --locked="false"
+Registering runner... succeeded                     runner=yC87WF_U
+Runner registered successfully. Feel free to start it, but if it's running already the config should be automatically reloaded! 
+```
+https://gitlab.com/bluepost/ui/settings/ci_cd
+
+```
+Runners activated for this project
+ 757cded9 Pause Remove Runner
+#562830
+docker-runner
+
+docker-minikube
+```
+
+```
+Setup tags docker-minikube to use this runner with tag:minikube-runner
+
+stages:
+  - build
+  - test
+  - release
+
+variables:
+
+  CONTAINER_IMAGE: davarski/ui
+  CONTAINER_IMAGE_BUILT: ${CONTAINER_IMAGE}:${CI_COMMIT_REF_SLUG}_${CI_COMMIT_SHA}
+  CONTAINER_IMAGE_LATEST: ${CONTAINER_IMAGE}:latest
+  CI_REGISTRY: index.docker.io  # container registry URL
+
+# build container image
+build:
+  tags:
+  - docker-minikube
+  stage: build
+  image: docker:latest
+  services:
+  - docker:dind
+  script:
+    - echo "Building Dockerfile-based application..."
+    - docker build -t ${CONTAINER_IMAGE_BUILT} .
+    - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
+    - echo "Pushing to the Container Registry..."
+    - docker push ${CONTAINER_IMAGE_BUILT}
+
+# run tests against built image
+test:
+  stage: test
+  script:
+    - exit 0
+
+# tag container image that passed the tests successfully
+# and push it to the registry
+release:
+  tags:
+  - docker-minikube
+  stage: release
+  image: docker:latest
+  services:
+  - docker:dind
+  script:
+    - echo "Pulling docker image from Container Registry"
+    - docker pull ${CONTAINER_IMAGE_BUILT}
+    - echo "Logging to Container Registry at ${CI_REGISTRY}"
+    - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
+    - echo "Pushing to Container Registry..."
+    - docker tag ${CONTAINER_IMAGE_BUILT} ${CONTAINER_IMAGE}:$(cat VERSION)
+    - docker push ${CONTAINER_IMAGE}:$(cat VERSION)
+    - docker tag ${CONTAINER_IMAGE}:$(cat VERSION) ${CONTAINER_IMAGE_LATEST}
+    - docker push ${CONTAINER_IMAGE_LATEST}
+    - echo ""
+  only:
+    - master
+
+
+```
+
+
+
+
 GitLab push to Dockerhub: davarski/ui and davarski/post images with tags latest, etc.
 
 ## Test microservices locally:
