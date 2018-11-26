@@ -143,10 +143,12 @@ $ kubectl create clusterrolebinding default-sa-admin --user system:serviceaccoun
 
 $ ./get-sa-token.sh --namespace default --account default
 
+$ cat ca.crt | base64 > ca.crt.code
+
 
 Gitlab: Setup CI/CD ui env variables:
 
-CI_ENV_K8S_CA = cat ca.crt
+CI_ENV_K8S_CA = cat ca.crt.code
 
 CI_ENV_K8S_MASTER = https://192.168.99.100:8443
 
@@ -221,7 +223,7 @@ deploy_staging:
   before_script:
     - mkdir -p /etc/deploy
     - cd /etc/deploy
-    - echo ${CI_ENV_K8S_CA}|base64 > ${CA}
+    - echo ${CI_ENV_K8S_CA}|base64 -d > ${CA}
     - echo ${CI_ENV_K8S_SA_TOKEN} > ${TOKEN}
     - kubectl config set-cluster minikube --server=${CI_ENV_K8S_MASTER} --certificate-authority=ca.crt --embed-certs=true
     - kubectl config set-credentials default --token=${TOKEN}
