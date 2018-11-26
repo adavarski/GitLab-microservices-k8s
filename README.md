@@ -13,7 +13,7 @@ MongoDB v3.2
 
 ```
 
-We will build, test, release, deploy with GitLab:
+We will build, test, release, deploy with GitLab CI/CD to k8s (minikube):
 
 https://gitlab.com/bluepost
 ```
