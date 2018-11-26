@@ -356,6 +356,32 @@ deploy_staging:
  ``` 
  
  ```
+ 
+Set up a specific Runner manually
+Install GitLab Runner
+Specify the following URL during the Runner setup: https://gitlab.com/ 
+Use the following registration token during setup: uyC4Dx8R5D4qzyYP_9wM 
+Reset runners registration token
+Start the Runner!
+
+
+davar@home ~/LABS/GitLab-group-microservices-minikube-deploy/ui $ kubectl exec -it gitlab-runner-5d49c87d4f-d6rwj /bin/bashroot@gitlab-runner-5d49c87d4f-d6rwj:/#gitlab-runner register --non-interactive --url "https://gitlab.com/" --registration-token "uyC4Dx8R5D4qzyYP_9wM" --executor "docker" --docker-image alpine:3 --description "docker-runner" --tag-list "docker-minikube3" --run-untagged --locked="false"
+
+
+ b8d4c7ed Pause Remove Runner
+#563710
+docker-runner
+
+docker-minikube3
+
+change tag 
+
+Runners activated for this project
+ b8d4c7ed Pause Remove Runner
+#563710
+docker-runner
+
+docker-minikube3 
  $ cat mongodb/.gitlab-ci.yml
 stages:
   - deploy
@@ -392,7 +418,9 @@ davar@home ~/LABS/GitLab-group-microservices-minikube-deploy/post $ helm list
 NAME   	REVISION	UPDATED                 	STATUS  	CHART         	APP VERSION	NAMESPACE
 jenkins	1       	Fri Nov 23 11:50:09 2018	DEPLOYED	jenkins-0.20.1	2.121.3    	default  
 post   	1       	Mon Nov 26 21:34:39 2018	DEPLOYED	post-0.1.0    	           	default  
-ui     	1       	Mon Nov 26 20:54:12 2018	DEPLOYED	ui-0.1.0      	           	default  
+ui     	1       	Mon Nov 26 20:54:12 2018	DEPLOYED	ui-0.1.0      	           	default
+mongodb	1       	Mon Nov 26 23:34:19 2018	DEPLOYED	mongodb-4.6.2 	4.0.3      	default  
+
 ```
 
 ## Test microservices locally:
