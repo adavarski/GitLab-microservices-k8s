@@ -1,4 +1,4 @@
-# microservises app: bluepost
+# microservises app: bluepost (ui, post, mongodb)
 
 ```
 Bluepost: Reddit-like application written in Ruby (Sinatra) created for learning purposes
