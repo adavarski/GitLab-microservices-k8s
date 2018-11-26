@@ -347,6 +347,13 @@ deploy_staging:
   - master 
   
  ``` 
+ ```
+davar@home ~/LABS/GitLab-group-microservices-minikube-deploy/post $ helm list
+NAME   	REVISION	UPDATED                 	STATUS  	CHART         	APP VERSION	NAMESPACE
+jenkins	1       	Fri Nov 23 11:50:09 2018	DEPLOYED	jenkins-0.20.1	2.121.3    	default  
+post   	1       	Mon Nov 26 21:34:39 2018	DEPLOYED	post-0.1.0    	           	default  
+ui     	1       	Mon Nov 26 20:54:12 2018	DEPLOYED	ui-0.1.0      	           	default  
+```
 
 ## Test microservices locally:
 ```
