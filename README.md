@@ -171,7 +171,6 @@ variables:
   CONTAINER_IMAGE_LATEST: ${CONTAINER_IMAGE}:latest
   CI_REGISTRY: index.docker.io  # container registry URL
   CA: /etc/deploy/ca.crt
-  TOKEN: /etc/deploy/sa.token
 
 # build container image
 build:
@@ -224,10 +223,8 @@ deploy_staging:
   image: davarski/k8s-helm:latest
   before_script:
     - mkdir -p /etc/deploy
-    - cd /etc/deploy
     - echo ${CI_ENV_K8S_CA}|base64 -d > ${CA}
-    - echo ${CI_ENV_K8S_SA_TOKEN} > ${TOKEN}
-    - kubectl config set-cluster minikube --server=${CI_ENV_K8S_MASTER} --certificate-authority=ca.crt --embed-certs=true
+    - kubectl config set-cluster minikube --server=${CI_ENV_K8S_MASTER} --certificate-authority=/etc/deploy/ca.crt --embed-certs=true
     - kubectl config set-credentials default --token=${CI_ENV_K8S_SA_TOKEN}
     - kubectl config set-context myctxt --cluster=minikube --user=default
     - kubectl config use-context myctxt
@@ -235,7 +232,7 @@ deploy_staging:
     - cd
 
   script:
-    - helm  upgrade ui ./ui/charts/ui --install  --set image.tag=latest 
+    - helm  upgrade ui ./charts/ui --install  --set image.tag=latest 
   environment:
     name: staging
   only:
