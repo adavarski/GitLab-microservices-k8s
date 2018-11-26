@@ -73,6 +73,8 @@ Runners activated for this project
 docker-runner
 
 docker-minikube
+
+Setup tag: docker-minikube for example
 ```
 
 ```
