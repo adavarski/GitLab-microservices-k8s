@@ -4,7 +4,7 @@ We will build, test, release, deploy with GitLab:
 
 https://gitlab.com/bluepost
 ```
-$ git clone https://github.com/adavarski/GitLab-group-microservices-minikube-deploy
+$ git clone https://github.com/adavarski/GitLab-microservices-minikube-deploy
 $ cd GitLab-group-microservices-minikube-deploy
 $ rm -rf .git
 ```
