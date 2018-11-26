@@ -137,7 +137,107 @@ release:
 
 ```
 
+```Deploy
 
+$ kubectl create clusterrolebinding default-sa-admin --user system:serviceaccount:default:default  --clusterrole cluster-admin
+
+$ ./get-sa-token.sh --namespace default --account default
+
+
+Gitlab: Setup CI/CD ui env variables:
+
+CI_ENV_K8S_CA = cat ca.crt
+
+CI_ENV_K8S_MASTER = https://192.168.99.100:8443
+
+CI_ENV_K8S_SA_TOKEN = cat sa.token
+
+New gitlab-ci.yml
+
+stages:
+  - build
+  - test
+  - release
+  - deploy
+
+variables:
+
+  CONTAINER_IMAGE: davarski/ui
+  CONTAINER_IMAGE_BUILT: ${CONTAINER_IMAGE}:${CI_COMMIT_REF_SLUG}_${CI_COMMIT_SHA}
+  CONTAINER_IMAGE_LATEST: ${CONTAINER_IMAGE}:latest
+  CI_REGISTRY: index.docker.io  # container registry URL
+  CA: /etc/deploy/ca.crt
+  TOKEN: /etc/deploy/sa.token
+
+# build container image
+build:
+  tags:
+  - docker-minikube
+  stage: build
+  image: docker:latest
+  services:
+  - docker:dind
+  script:
+    - echo "Building Dockerfile-based application..."
+    - docker build -t ${CONTAINER_IMAGE_BUILT} .
+    - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
+    - echo "Pushing to the Container Registry..."
+    - docker push ${CONTAINER_IMAGE_BUILT}
+
+# run tests against built image
+test:
+  stage: test
+  script:
+    - exit 0
+
+# tag container image that passed the tests successfully
+# and push it to the registry
+release:
+  tags:
+  - docker-minikube
+  stage: release
+  image: docker:latest
+  services:
+  - docker:dind
+  script:
+    - echo "Pulling docker image from Container Registry"
+    - docker pull ${CONTAINER_IMAGE_BUILT}
+    - echo "Logging to Container Registry at ${CI_REGISTRY}"
+    - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
+    - echo "Pushing to Container Registry..."
+    - docker tag ${CONTAINER_IMAGE_BUILT} ${CONTAINER_IMAGE}:$(cat VERSION)
+    - docker push ${CONTAINER_IMAGE}:$(cat VERSION)
+    - docker tag ${CONTAINER_IMAGE}:$(cat VERSION) ${CONTAINER_IMAGE_LATEST}
+    - docker push ${CONTAINER_IMAGE_LATEST}
+    - echo ""
+  only:
+    - master
+    
+deploy_staging:
+  tags:
+  - docker-minikube 
+  stage: deploy
+  image: davarski/k8s-helm:latest
+  before_script:
+    - mkdir -p /etc/deploy
+    - cd /etc/deploy
+    - echo ${CI_ENV_K8S_CA} > ${CA}
+    - echo ${CI_ENV_K8S_SA_TOKEN} > ${TOKEN}
+    - kubectl config set-cluster minikube --server=${CI_ENV_K8S_MASTER} --certificate-authority=ca.crt --embed-certs=true
+    - kubectl config set-credentials default --token=${TOKEN}
+    - kubectl config set-context myctxt --cluster=minikube --user=default
+    - kubectl config use-context myctxt
+    - helm init --client-only
+    - cd
+
+  script:
+    - helm  upgrade ui ./ui/charts/ui --install  --set image.tag=latest 
+  environment:
+    name: staging
+  only:
+  - master   
+
+```
 
 
 GitLab push to Dockerhub: davarski/ui and davarski/post images with tags latest, etc.
