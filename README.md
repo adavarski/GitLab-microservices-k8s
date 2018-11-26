@@ -121,6 +121,7 @@ release:
   ```  
 
 ```
+If we want to build, test, release and DEPLOY to minikube local k8s
 For ui pipeline (the same for post, mongodb)
 
 Go to https://gitlab.com/bluepost/ui/settings/ci_cd -> Runners (Expand)
@@ -135,7 +136,7 @@ Start the Runner!
 ```
 ```
 
-minikube
+minikube setup:
 
 $ kubectl create -f gitlab-runner-deployment.yaml
 
