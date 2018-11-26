@@ -52,6 +52,9 @@ Reset runners registration token
 Start the Runner!
 ```
 ```
+
+minikube
+
 $ kubectl create -f gitlab-runner-deployment.yaml
 
 $ kubectl get pod|grep runner|grep Running
@@ -74,7 +77,7 @@ docker-runner
 
 docker-minikube
 
-Setup tag: docker-minikube for example
+Setup tag: docker-minikube for example for minikube cluster
 ```
 
 ```
@@ -156,7 +159,7 @@ CI_ENV_K8S_MASTER = https://192.168.99.100:8443
 
 CI_ENV_K8S_SA_TOKEN = cat sa.token
 
-New gitlab-ci.yml
+New gitlab-ci.yml for deploy 
 
 stages:
   - build
@@ -229,19 +232,17 @@ deploy_staging:
     - kubectl config set-context myctxt --cluster=minikube --user=default
     - kubectl config use-context myctxt
     - helm init --client-only
-    - cd
 
   script:
     - helm  upgrade ui ./charts/ui --install  --set image.tag=latest 
   environment:
     name: staging
   only:
-  - master   
+  - master 
+
 
 ```
 
-
-GitLab push to Dockerhub: davarski/ui and davarski/post images with tags latest, etc.
 
 ## Test microservices locally:
 ```
@@ -449,7 +450,7 @@ helm del --purge mongodb
 
 
 ````
-### Deploy with GitLab and Helm : TODO
+### Deploy with GitLab and Helm minikube 
 
 ```
 Install GitLab or use gitlab chart to install 
@@ -487,7 +488,7 @@ deploy_staging:
 ```
 
 
- ###  with gitlab-runner
+ ###  test with with gitlab-runner on host
  
  ```
  
