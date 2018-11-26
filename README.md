@@ -561,10 +561,27 @@ helm del --purge mongodb
 
 
 ````
-### Deploy with GitLab and Helm minikube 
+### Deploy with GitLab and Helm minikube : TODO
 
 ```
 Install GitLab or use gitlab chart to install 
+
+Install the GitLab runner chart:
+
+$ helm install \
+    --namespace gitlab \
+    --name gitlab-runner \
+    -f gitlab-runner.yml \
+    gitlab/gitlab-runner
+Register the Docker runner:
+
+$ gitlab-runner register -n \
+    --url http://gitlab.dq.b.com/ \
+    --registration-token ${RUNNER_TOKEN} \
+    --executor docker \
+    --description "Docker Runner" \
+    --docker-image "docker:latest" \
+    --docker-volumes /var/run/docker.sock:/var/run/docker.sock
 
 $ helm init # initialize Helm
 $ helm repo add gitlab https://charts.gitlab.io
