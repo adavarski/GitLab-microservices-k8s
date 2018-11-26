@@ -282,7 +282,7 @@ deploy_staging:
 ```
 
 
- ### Deploy with gitlab-runner
+ ###  with gitlab-runner
  
  ```
  
@@ -290,7 +290,7 @@ deploy_staging:
  sudo chmod +x /usr/local/bin/gitlab-runner
 
 
-davar@home ~/LABS/GitLab-group-microservices-minikube-deploy/ui $ cat .gitlab-ci.yml
+$ cat .gitlab-ci.yml
 stages:
   - deploy
 
@@ -306,69 +306,10 @@ deploy_staging:
     name: staging
   only:
   - master
-davar@home ~/LABS/GitLab-group-microservices-minikube-deploy/ui $ sudo gitlab-ci-multi-runner exec docker deploy_staging --docker-volumes /home/davar/.kube:/home/davar/.kube --docker-volumes /home/davar/.minikube:/home/davar/.minikube --docker-volumes ${PWD}:/ui
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 davar@home ~/LABS/GitLab-group-microservices-minikube-deploy/ui $ gitlab-runner exec docker deploy_staging --docker-volumes /home/davar/.kube:/home/davar/.kube --docker-volumes /home/davar/.minikube:/home/davar/.minikube --docker-volumes ${PWD}:/ui
 Runtime platform                                    arch=amd64 os=linux pid=13116 revision=3afdaba6 version=11.5.0
-WARNING: You most probably have uncommitted changes. 
-WARNING: These changes will not be tested.         
-Running with gitlab-runner 11.5.0 (3afdaba6)
-Using Docker executor with image davarski/k8s-helm:latest ...
-Pulling docker image davarski/k8s-helm:latest ...
-Using docker image sha256:46f1b520ac9eb76235cd8f6bedc56dfcb8fc1a3017265abd16c20bd3b47f1ef6 for davarski/k8s-helm:latest ...
-Running on runner--project-0-concurrent-0 via home...
-Cloning repository...
-Cloning into '/builds/project-0'...
-done.
-Checking out 6814ad1a as master...
-Skipping Git submodules setup
-$ export KUBECONFIG=/home/davar/.kube/config
-$ helm init --client-only
-Creating /root/.helm 
-Creating /root/.helm/repository 
-Creating /root/.helm/repository/cache 
-Creating /root/.helm/repository/local 
-Creating /root/.helm/plugins 
-Creating /root/.helm/starters 
-Creating /root/.helm/cache/archive 
-Creating /root/.helm/repository/repositories.yaml 
-Adding stable repo with URL: https://kubernetes-charts.storage.googleapis.com 
-Adding local repo with URL: http://127.0.0.1:8879/charts 
-$HELM_HOME has been configured at /root/.helm.
-Not installing Tiller due to 'client-only' flag having been set
-Happy Helming!
-$ helm  upgrade ui /ui/charts/ui --install  --set image.tag=latest
-Release "ui" does not exist. Installing it now.
-NAME:   ui
-LAST DEPLOYED: Sun Nov 25 23:34:07 2018
-NAMESPACE: default
-STATUS: DEPLOYED
-
-RESOURCES:
-==> v1/Service
-NAME  AGE
-ui    2s
-
-==> v1beta1/Deployment
-ui  2s
-
-==> v1/Pod(related)
-
-NAME                 READY  STATUS   RESTARTS  AGE
-ui-7d95c8ff49-nw4hd  0/1    Pending  0         1s
-ui-7d95c8ff49-rnc2z  0/1    Pending  0         1s
-
-
-NOTES:
-1. Get the application URL by running these commands:
-  export NODE_PORT=$(kubectl get --namespace default -o jsonpath="{.spec.ports[0].nodePort}" services ui)
-  export NODE_IP=$(kubectl get nodes --namespace default -o jsonpath="{.items[0].status.addresses[0].address}")
-  echo http://$NODE_IP:$NODE_PORT
-  export SERVICE_IP=$(kubectl get svc --namespace default ui -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-  echo http://$SERVICE_IP:9292
-  export POD_NAME=$(kubectl get pods --namespace default -l "app=ui,release=ui" -o jsonpath="{.items[0].metadata.name}")
-  echo "Visit http://127.0.0.1:8080 to use your application"
-  kubectl port-forward $POD_NAME 8080:9292
+.....
 
 Job succeeded
   
