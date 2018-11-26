@@ -228,7 +228,7 @@ deploy_staging:
     - echo ${CI_ENV_K8S_CA}|base64 -d > ${CA}
     - echo ${CI_ENV_K8S_SA_TOKEN} > ${TOKEN}
     - kubectl config set-cluster minikube --server=${CI_ENV_K8S_MASTER} --certificate-authority=ca.crt --embed-certs=true
-    - kubectl config set-credentials default --token=${TOKEN}
+    - kubectl config set-credentials default --token=${CI_ENV_K8S_SA_TOKEN}
     - kubectl config set-context myctxt --cluster=minikube --user=default
     - kubectl config use-context myctxt
     - helm init --client-only
