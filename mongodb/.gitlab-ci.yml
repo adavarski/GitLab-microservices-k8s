@@ -20,7 +20,7 @@ deploy_staging:
     - helm init --client-only
 
   script:
-    - helm  upgrade mongodb ./charts/mongodb --install  --set image.tag=latest 
+    - helm  upgrade mongodb ./charts/mongodb --install   
   environment:
     name: staging
   only:
