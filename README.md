@@ -1,6 +1,6 @@
 # microservises app: bluepost
 
-We will build, test and release with GitLab:
+We will build, test, release, deploy with GitLab:
 
 https://gitlab.com/bluepost
 ```
@@ -9,7 +9,7 @@ $ cd GitLab-group-microservices-minikube-deploy
 $ rm -rf .git
 ```
 
-This is an example of a microservices application with **Gitlab CI** pipelenes (build, test, release)
+This is an example of a microservices application with **Gitlab CI** pipelenes (build, test, release, deploy)
 
 In Gitlab UI, create a new group for bluepost application
 
@@ -36,13 +36,14 @@ $ git remote add origin https://gitlab.com/bluepost/post.git
 $ git push origin master
 ```
 
-``` Setup ENV variables for pipeline: CI_REGISTRY_PASSWORD, CI_REGISTRY_USER
+``` Setup ENV variables for pipeline: CI_REGISTRY_PASSWORD, CI_REGISTRY_USER ```
 
+```
 For ui pipeline (the same for post)
 
 Go to https://gitlab.com/bluepost/ui/settings/ci_cd -> Runners (Expand)
 
-```
+
 Set up a specific Runner manually
 Install GitLab Runner
 Specify the following URL during the Runner setup: https://gitlab.com/ 
@@ -62,9 +63,10 @@ $kubectl exec -it gitlab-runner-5d49c87d4f-d6rwj /bin/bash
 Registering runner... succeeded                     runner=yC87WF_U
 Runner registered successfully. Feel free to start it, but if it's running already the config should be automatically reloaded! 
 ```
+```
 https://gitlab.com/bluepost/ui/settings/ci_cd
 
-```
+
 Runners activated for this project
  757cded9 Pause Remove Runner
 #562830
