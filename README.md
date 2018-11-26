@@ -55,54 +55,13 @@ $ git commit -m "Init commit"
 $ git remote add origin https://gitlab.com/bluepost/mongodb.git
 $ git push origin master
 ```
+if we dont use mongodb chart:
+
 $ helm  install --set usePassword=false --name mongodb  stable/mongodb if we not use helm chart ... chart values -> usePassword=false
 
 ``` Setup ENV variables for pipeline: CI_REGISTRY_PASSWORD, CI_REGISTRY_USER ```
-
 ```
-For ui pipeline (the same for post, mongodb)
-
-Go to https://gitlab.com/bluepost/ui/settings/ci_cd -> Runners (Expand)
-
-
-Set up a specific Runner manually
-Install GitLab Runner
-Specify the following URL during the Runner setup: https://gitlab.com/ 
-Use the following registration token during setup: yC87WF_USt9KZqF9c-Ps 
-Reset runners registration token
-Start the Runner!
-```
-```
-
-minikube
-
-$ kubectl create -f gitlab-runner-deployment.yaml
-
-$ kubectl get pod|grep runner|grep Running
-gitlab-runner-5d49c87d4f-d6rwj                1/1     Running       0          2h
-
-$kubectl exec -it gitlab-runner-5d49c87d4f-d6rwj /bin/bash
-
-#gitlab-runner register --non-interactive --url "https://gitlab.com/" --registration-token "yC87WF_USt9KZqF9c-Ps" --executor "docker" --docker-image alpine:3 --description "docker-runner" --tag-list "docker-minikube" --run-untagged --locked="false"
-Registering runner... succeeded                     runner=yC87WF_U
-Runner registered successfully. Feel free to start it, but if it's running already the config should be automatically reloaded! 
-```
-```
-https://gitlab.com/bluepost/ui/settings/ci_cd
-
-
-Runners activated for this project
- 757cded9 Pause Remove Runner
-#562830
-docker-runner
-
-docker-minikube
-
-Setup tag: docker-minikube for example for minikube cluster
-```
-
-```
-Setup tags docker-minikube to use this runner with tag:minikube-runner
+If we want only to build, test, deploy without minikube 
 
 stages:
   - build
@@ -159,6 +118,52 @@ release:
     - echo ""
   only:
     - master
+  ```  
+
+```
+For ui pipeline (the same for post, mongodb)
+
+Go to https://gitlab.com/bluepost/ui/settings/ci_cd -> Runners (Expand)
+
+
+Set up a specific Runner manually
+Install GitLab Runner
+Specify the following URL during the Runner setup: https://gitlab.com/ 
+Use the following registration token during setup: yC87WF_USt9KZqF9c-Ps 
+Reset runners registration token
+Start the Runner!
+```
+```
+
+minikube
+
+$ kubectl create -f gitlab-runner-deployment.yaml
+
+$ kubectl get pod|grep runner|grep Running
+gitlab-runner-5d49c87d4f-d6rwj                1/1     Running       0          2h
+
+$kubectl exec -it gitlab-runner-5d49c87d4f-d6rwj /bin/bash
+
+#gitlab-runner register --non-interactive --url "https://gitlab.com/" --registration-token "yC87WF_USt9KZqF9c-Ps" --executor "docker" --docker-image alpine:3 --description "docker-runner" --tag-list "docker-minikube" --run-untagged --locked="false"
+Registering runner... succeeded                     runner=yC87WF_U
+Runner registered successfully. Feel free to start it, but if it's running already the config should be automatically reloaded! 
+```
+```
+https://gitlab.com/bluepost/ui/settings/ci_cd
+
+
+Runners activated for this project
+ 757cded9 Pause Remove Runner
+#562830
+docker-runner
+
+docker-minikube
+
+Setup tag: docker-minikube for example for minikube cluster
+```
+
+```
+Setup tags docker-minikube to use this runner with tag:minikube-runner
 
 
 ```
