@@ -221,7 +221,7 @@ deploy_staging:
   before_script:
     - mkdir -p /etc/deploy
     - cd /etc/deploy
-    - echo ${CI_ENV_K8S_CA} > ${CA}
+    - echo ${CI_ENV_K8S_CA}|base64 > ${CA}
     - echo ${CI_ENV_K8S_SA_TOKEN} > ${TOKEN}
     - kubectl config set-cluster minikube --server=${CI_ENV_K8S_MASTER} --certificate-authority=ca.crt --embed-certs=true
     - kubectl config set-credentials default --token=${TOKEN}
