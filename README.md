@@ -171,6 +171,22 @@ Setup tags docker-minikube to use this runner with tag:minikube-runner
 
 ```Deploy
 
+we can define kube_config variable for deploy pipelines this way for minikube:
+mkdir ~/tmp; cd ~/tmp; cp cp ~/.minikube/client.* .; cp ~/.kube/config . ;cp ~/.minikube/ca.crt .; cat client.key|base64 > client.key.b64; cat client.crt|base64 > client.crt.b64; cat ca.crt|base64 > ca.crt.b64 and put the content of .b64 files in config (certificate-authority: cat ca.crt.b64; client-certificate: cat client.crt.b64; client-key: cat client.key.b64)
+
+KUBE_CONFIG: cat config 
+
+image: davarski/helm-k8s:latest
+  variables:
+    KUBECONFIG: /etc/deploy/config
+  before_script:
+    - mkdir -p /etc/deploy
+    - echo ${kube_config} | base64 -d > ${KUBECONFIG}
+    - export KUBECONFIG=/etc/deploy/config
+    - kubectl config use-context minikube
+
+or we can use CA and token for our deployment user, we well use default user for simplicity and setup as cluster-admin, in production we have to have deployment user with right k8s RBAC settings. 
+
 $ kubectl create clusterrolebinding default-sa-admin --user system:serviceaccount:default:default  --clusterrole cluster-admin
 
 $ ./get-sa-token.sh --namespace default --account default
