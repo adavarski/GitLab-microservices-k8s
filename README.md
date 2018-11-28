@@ -171,22 +171,43 @@ Setup tags docker-minikube to use this runner with tag:minikube-runner
 
 ```Deploy
 
-we can define kube_config variable for deploy pipelines this way for minikube:
+we can define KUBE_CONFIG variable for deploy pipelines this way for minikube:
 minikube ssh ->  get /etc/kubernetes/admin.conf and change localhost to 192.168.99.100 (minikube ip) 
-
+cat admin.conf|base64 > admin.conf.base64
+ 
 Setup env variable: 
 
-KUBE_CONFIG: cat admin.conf OR cat admin.conf|base64 > admin.conf.base64; cat admin.conf.base64
+KUBE_CONFIG:  cat admin.conf.base64
 
-- echo ${kube_config} > ${KUBECONFIG} or - echo ${kube_config} | base64 -d > ${KUBECONFIG} 
+stages:
+  - deploy
 
-image: davarski/helm-k8s:latest
-  variables:
-    KUBECONFIG: /etc/deploy/config
-  before_script:
-    - mkdir -p /etc/deploy
-    - echo ${kube_config} | base64 -d > ${KUBECONFIG} 
-    - export KUBECONFIG=/etc/deploy/config
+variables:
+
+  CONTAINER_IMAGE: davarski/ui
+  CONTAINER_IMAGE_BUILT: ${CONTAINER_IMAGE}:${CI_COMMIT_REF_SLUG}_${CI_COMMIT_SHA}
+  CONTAINER_IMAGE_LATEST: ${CONTAINER_IMAGE}:latest
+  CI_REGISTRY: index.docker.io  # container registry URL
+  CA: /etc/deploy/ca.crt
+
+   
+deploy_staging:
+  tags:
+  - docker-minikube 
+  stage: deploy
+  image: davarski/k8s-helm:latest
+  before_script:
+    - mkdir -p /etc/deploy
+    - echo ${KUBE_CONFIG}|base64 -d > ${CA}
+    - export KUBECONFIG=/etc/deploy/ca.crt
+    - helm init --client-only
+
+  script:
+    - helm  upgrade ui ./charts/ui --install  --set image.tag=latest 
+  environment:
+    name: staging
+  only:
+  - master 
 
 or we can use CA and token for our deployment user, we well use default user for simplicity and setup as cluster-admin, in production we have to have deployment user with right k8s RBAC settings. 
 
