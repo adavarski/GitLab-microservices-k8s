@@ -176,16 +176,17 @@ minikube ssh ->  get /etc/kubernetes/admin.conf and change localhost to 192.168.
 
 Setup env variable: 
 
-KUBE_CONFIG: cat admin.conf ... or cat admin.conf|base64 > admin.conf.base64; cat admin.conf.base64
+KUBE_CONFIG: cat admin.conf OR cat admin.conf|base64 > admin.conf.base64; cat admin.conf.base64
+
+- echo ${kube_config} > ${KUBECONFIG} or - echo ${kube_config} | base64 -d > ${KUBECONFIG} 
 
 image: davarski/helm-k8s:latest
   variables:
     KUBECONFIG: /etc/deploy/config
   before_script:
     - mkdir -p /etc/deploy
-    - echo ${kube_config} | base64 -d > ${KUBECONFIG}
+    - echo ${kube_config} | base64 -d > ${KUBECONFIG} 
     - export KUBECONFIG=/etc/deploy/config
-    - kubectl config use-context minikube
 
 or we can use CA and token for our deployment user, we well use default user for simplicity and setup as cluster-admin, in production we have to have deployment user with right k8s RBAC settings. 
 
