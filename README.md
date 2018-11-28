@@ -172,9 +172,11 @@ Setup tags docker-minikube to use this runner with tag:minikube-runner
 ```Deploy
 
 we can define kube_config variable for deploy pipelines this way for minikube:
-mkdir ~/tmp; cd ~/tmp; cp cp ~/.minikube/client.* .; cp ~/.kube/config . ;cp ~/.minikube/ca.crt .; cat client.key|base64 > client.key.b64; cat client.crt|base64 > client.crt.b64; cat ca.crt|base64 > ca.crt.b64 and put the content of .b64 files in config (certificate-authority: cat ca.crt.b64; client-certificate: cat client.crt.b64; client-key: cat client.key.b64)
+minikube ssh ->  get /etc/kubernetes/admin.conf and change localhost to 192.168.99.100 (minikube ip) 
 
-KUBE_CONFIG: cat config 
+Setup env variable: 
+
+KUBE_CONFIG: cat admin.conf ... or cat admin.conf|base64 > admin.conf.base64; cat admin.conf.base64
 
 image: davarski/helm-k8s:latest
   variables:
