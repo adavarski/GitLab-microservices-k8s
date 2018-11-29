@@ -17,7 +17,7 @@ We will build, test, release, deploy with GitLab CI/CD to k8s (minikube):
 
 https://gitlab.com/bluepost
 ```
-$ git clone https://github.com/adavarski/GitLab-microservices-minikube-deploy
+$ git clone https://github.com/adavarski/GitLab-microservices-k8s
 $ cd GitLab-group-microservices-minikube-deploy
 $ rm -rf .git
 ```
