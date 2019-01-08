@@ -646,7 +646,7 @@ Setup jenkins https://github.com/adavarski/K8S-with-jenkins-and-helm
 
 Get admin user password:
 printf $(kubectl get secret --namespace jenkins jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
-
+!!! printf $(kubectl get secret --namespace default jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
  $ kubectl get svc|grep NodePort
 jenkins         NodePort    10.100.88.246   <none>        8080:32123/TCP   45m
 
@@ -658,7 +658,7 @@ Login to jenkins http://192.168.99.100:32123 user admin with password from print
 Setup k8s RBAC for jenkins:
 
 $ kubectl create clusterrolebinding kube-system-default-admin --clusterrole cluster-admin --serviceaccount=kube-system:default
-$ kubectl create clusterrolebinding default-sa-admin --user system:serviceaccount:default:default  --clusterrole cluster-admin
+!!! $ kubectl create clusterrolebinding default-sa-admin --user system:serviceaccount:default:default  --clusterrole cluster-admin
 
 Install stable/mongodb helm chart (we will not build chart for mongodb)
 
