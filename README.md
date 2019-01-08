@@ -640,6 +640,7 @@ helm del --purge mongodb
 Setup jenkins https://github.com/adavarski/K8S-with-jenkins-and-helm
 
  $ cd ./jenkins    
+ $ helm init
  $ kubectl create -f jenkins-volume.yml 
  $ helm install --name jenkins --values values.yml stable/jenkins
 
